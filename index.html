@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#4b3f9e"><link rel="icon" href="icon-192.png"><title>AI StudyMate</title>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#fbf1ee;--ink:#2f2548;--mut:#7a6f93;--card:#fff;--pri:#4b3f9e;--acc:#8a63d2;--line:#eadff0;
+--c0:#ffd6e2;--c1:#dcd0f7;--c2:#d3ecd9;--c3:#fff0b9;--c4:#d3e8f8;--cardink:#2f2548}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171329;--ink:#f1ecfb;--mut:#a79dc4;--card:#241e3c;--line:#3a3160;--pri:#9d8cff;--acc:#b794f6;--c0:#5b3350;--c1:#3f3573;--c2:#2f5143;--c3:#5b4f2a;--c4:#2c4a66;--cardink:#f1ecfb}}
+:root[data-theme="dark"]{--bg:#171329;--ink:#f1ecfb;--mut:#a79dc4;--card:#241e3c;--line:#3a3160;--pri:#9d8cff;--acc:#b794f6;--c0:#5b3350;--c1:#3f3573;--c2:#2f5143;--c3:#5b4f2a;--c4:#2c4a66;--cardink:#f1ecfb}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Nunito,system-ui,sans-serif;min-height:100vh}
+h1,h2,h3{font-family:Gaegu,cursive;margin:0;line-height:1.1}h1{font-size:2.4rem}h2{font-size:1.8rem}h3{font-size:1.4rem}
+main{max-width:760px;margin:auto;padding:18px 16px 110px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+button,input,select,textarea{font:inherit;color:inherit}
+.btn{background:var(--pri);color:#fff;border:0;border-radius:99px;padding:10px 18px;font-weight:800;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--pri);border:2px solid var(--pri)}
+.btn:focus-visible,.tab:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+input,select,textarea{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:10px 12px;width:100%}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}.row>*{flex:1 1 140px}
+.card{background:var(--card);border-radius:22px;padding:16px;border:2px solid var(--line);margin:12px 0}
+.board{columns:2 240px;column-gap:14px}
+.note{break-inside:avoid;margin:0 0 16px;padding:18px 14px 12px;border-radius:6px 18px 8px 18px;color:var(--cardink);position:relative;box-shadow:0 6px 14px rgba(70,40,110,.12)}
+.note:nth-child(odd){transform:rotate(-1.2deg)}.note:nth-child(even){transform:rotate(1.4deg)}
+.note::before{content:"";position:absolute;top:-9px;left:50%;width:64px;height:18px;margin-left:-32px;background:rgba(255,255,255,.65);transform:rotate(-3deg);border:1px dashed rgba(0,0,0,.1)}
+.note.done .t{text-decoration:line-through;opacity:.55}
+.stk{font-size:1.7rem;display:inline-block;transform:rotate(-8deg)}
+.pill{display:inline-block;border-radius:99px;padding:2px 10px;font-size:.8rem;font-weight:800;background:rgba(255,255,255,.6);color:#2f2548}
+.chip{border:2px solid var(--line);background:var(--card);border-radius:99px;padding:6px 14px;cursor:pointer;font-weight:600}
+.chip.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:2px solid var(--line);display:flex;justify-content:space-around;padding:8px 6px calc(8px + env(safe-area-inset-bottom,0px));z-index:5}
+.tab{background:none;border:0;border-radius:16px;padding:6px 10px;font-size:.75rem;font-weight:800;color:var(--mut);cursor:pointer;display:flex;flex-direction:column;align-items:center}
+.tab span{font-size:1.5rem}.tab.on{background:var(--c1);color:var(--cardink)}
+.bar{height:14px;background:var(--line);border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--pri),var(--acc))}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px;border-radius:16px;border:2px solid var(--line);background:var(--card);cursor:pointer}
+.opt.ok{background:var(--c2);border-color:#4caf7a}.opt.bad{background:var(--c0);border-color:#e0607e}
+.flip{min-height:170px;display:grid;place-items:center;text-align:center;cursor:pointer;font-family:Gaegu,cursive;font-size:1.7rem;padding:20px;border-radius:24px;background:var(--c1);color:var(--cardink)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stats .card{text-align:center;margin:0}.stats b{font-size:1.6rem;display:block;font-family:Gaegu}
+.muted{color:var(--mut);font-size:.9rem}.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.demo{background:var(--c3);color:#2f2548;border-radius:12px;padding:8px 12px;font-size:.85rem;font-weight:700}
+@media(prefers-reduced-motion:no-preference){.note,.card{transition:transform .2s}}
+</style></head><body><main id="app"></main><nav id="nav"></nav>
+<script>
+const PAL=5,PRI={H:['🔥','High'],M:['⭐','Medium'],L:['🌱','Low']},ORD={H:0,M:1,L:2};
+const BANK=[
+{s:'Maths',q:'What is 15% of 200?',o:['20','30','35','25'],a:1,x:'15/100 × 200 = 30.'},
+{s:'Maths',q:'What is the value of 2^5?',o:['10','16','32','64'],a:2,x:'2×2×2×2×2 = 32.'},
+{s:'Maths',q:'Next in series: 2, 6, 12, 20, ?',o:['28','30','32','26'],a:1,x:'Differences are 4, 6, 8, so next is +10 = 30.'},
+{s:'Science',q:'Which organelle is called the powerhouse of the cell?',o:['Nucleus','Ribosome','Mitochondria','Golgi body'],a:2,x:'Mitochondria produce most of the cell’s ATP.'},
+{s:'Science',q:'SI unit of force is?',o:['Joule','Newton','Pascal','Watt'],a:1,x:'Force is measured in newtons (kg·m/s²).'},
+{s:'GK',q:'Article 21 of the Indian Constitution protects?',o:['Right to equality','Freedom of speech','Life and personal liberty','Right to property'],a:2,x:'Article 21: protection of life and personal liberty.'},
+{s:'GK',q:'Who wrote “The Discovery of India”?',o:['M. K. Gandhi','Jawaharlal Nehru','S. Radhakrishnan','B. R. Ambedkar'],a:1,x:'Written by Jawaharlal Nehru in 1944.'},
+{s:'English',q:'Synonym of “abundant”:',o:['Scarce','Plentiful','Tiny','Rigid'],a:1,x:'Abundant means existing in large quantities.'}];
+const valid=q=>q&&q.q&&Array.isArray(q.o)&&q.o.length==4&&Number.isInteger(q.a)&&q.a>=0&&q.a<4&&q.x;
+const e=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let S={name:'',exam:'SSC',goal:30,subs:[{id:1,n:'Maths',e:'🧮',c:0},{id:2,n:'Science',e:'🔬',c:2}],todos:[],cards:[],ans:0,cor:0,hist:[],tab:'home'};
+try{const r=localStorage.getItem('sm1');if(r)S=Object.assign(S,JSON.parse(r))}catch(x){}
+const save=()=>{try{localStorage.setItem('sm1',JSON.stringify(S))}catch(x){}};
+let Q=null,F={sub:0},CI=0,FL=false,STK=['📚','✏️','🧠','🎀','🌸','☕','🦋','⭐'];
+const $=s=>document.querySelector(s),sub=id=>S.subs.find(s=>s.id==id)||{n:'General',e:'✨',c:4};
+function go(t){S.tab=t;save();draw()}
+function draw(){
+ const T=[['home','🏠','Home'],['todo','📝','To-do'],['quiz','🎯','Quiz'],['mock','⏱️','Mock'],['tutor','🤖','Tutor'],['more','✨','More']];
+ $('#nav').innerHTML=!S.email||!S.name?'':T.map(t=>`<button class="tab ${S.tab==t[0]||(t[0]=='more'&&['cards','pro','notes','stats','acct'].includes(S.tab))?'on':''}" onclick="go('${t[0]}')"><span>${t[1]}</span>${t[2]}</button>`).join('');
+ $('#app').innerHTML=!S.email?login():!S.name?onb():({home,todo,quiz,cards,mock,pro,tutor,more,notes,stats,acct}[S.tab])()+(['cards','pro','notes','stats','acct'].includes(S.tab)?'<p><button class="btn ghost" onclick="go(&quot;more&quot;)">← More</button></p>':'');
+}
+function onb(){return`<h1>Hey you 🌷</h1><p class="muted">Let’s set up your study space.</p><div class="card">
+<label>Your name<input id="n" maxlength="30" placeholder="e.g. Ananya"></label><div class="row">
+<label>Target exam<select id="x">${['SSC','NEET','JEE','Banking','School/College'].map(x=>`<option>${x}</option>`)}</select></label>
+<label>Daily goal (minutes)<input id="g" type="number" min="10" max="600" value="60"></label></div>
+<button class="btn" onclick="S.name=($('#n').value||'Friend').slice(0,30);S.exam=$('#x').value;S.goal=+$('#g').value||60;go('home')">Start studying ✨</button></div>
+<p class="muted">Demo build: your data stays on this device. Account sync needs a backend (see notes).</p>`}
+function home(){const d=S.todos.filter(t=>t.d).length,tot=S.todos.length,acc=S.ans?Math.round(S.cor/S.ans*100):0,p=tot?Math.round(d/tot*100):0;
+ const next=S.todos.filter(t=>!t.d).sort((a,b)=>ORD[a.p]-ORD[b.p]).slice(0,3);
+ const weak={};S.hist.forEach(h=>{weak[h.s]=weak[h.s]||[0,0];weak[h.s][0]+=h.c;weak[h.s][1]+=h.n});
+ const w=Object.entries(weak).filter(x=>x[1][0]/x[1][1]<.6);
+ const due=S.cards.filter(c=>!c.next||c.next<=Date.now()).length;
+ return`<div class="top"><div><h1>Hi ${e(S.name)} <span class="stk">🎀</span></h1><div class="muted">Target: ${e(S.exam)} · goal ${S.goal} min/day</div></div><button class="btn ghost" onclick="tgl()">🌗</button></div>
+ <div class="stats"><div class="card"><b>${S.ans}</b>answered</div><div class="card"><b>${acc}%</b>accuracy</div><div class="card"><b>${due}</b>cards due</div></div>
+ <div class="card"><h3>Today’s tasks ${tot?`(${d}/${tot})`:''}</h3><div class="bar"><i style="width:${p}%"></i></div>
+ ${next.length?next.map(t=>`<p>${sub(t.s).e} ${e(t.t)} <span class="pill" style="background:var(--c3)">${PRI[t.p][0]} ${PRI[t.p][1]}</span></p>`).join(''):'<p class="muted">Nothing planned yet. Add your first task in the To-do tab 🌱</p>'}</div>
+ <div class="card"><h3>Recent mocks</h3>${(S.mocks||[]).length?(S.mocks||[]).slice(-3).reverse().map(m=>`<p>⏱️ ${m.d} · <b>${m.sc}/${m.max}</b> · ${m.acc}%</p>`).join(''):'<p class="muted">No mock tests yet. Try one in the Mock tab.</p>'}</div>
+ <div class="card"><h3>Revise next</h3>${w.length?w.map(x=>`<p>🔁 ${e(x[0])} — ${Math.round(x[1][0]/x[1][1]*100)}% accuracy</p>`).join(''):'<p class="muted">Take a quiz and your weak topics will show up here.</p>'}</div>
+ <div class="row"><button class="btn" onclick="go('quiz')">🎯 Quick quiz</button><button class="btn ghost" onclick="go('cards')">🃏 Flashcards</button></div>`}
+function tgl(){const r=document.documentElement;r.dataset.theme=r.dataset.theme=='dark'?'light':'dark'}
+function todo(){const L=S.todos.filter(t=>!F.sub||t.s==F.sub).sort((a,b)=>a.d-b.d||ORD[a.p]-ORD[b.p]);
+ return`<h1>My to-do <span class="stk">📝</span></h1>
+ <div class="card"><h3>Subjects</h3><div class="row"><span class="chip ${!F.sub?'on':''}" onclick="F.sub=0;draw()">All</span>${S.subs.map(s=>`<span class="chip ${F.sub==s.id?'on':''}" onclick="F.sub=${s.id};draw()">${s.e} ${e(s.n)}</span>`).join('')}</div>
+ <div class="row"><select id="se">${STK.map(s=>`<option>${s}</option>`)}</select><input id="sn" maxlength="24" placeholder="New subject, e.g. Reasoning"><button class="btn" onclick="addSub()">Add subject</button></div></div>
+ <div class="card"><h3>New task</h3><div class="row"><input id="tt" maxlength="80" placeholder="What do you need to do?">
+ <select id="ts">${S.subs.map(s=>`<option value="${s.id}" ${F.sub==s.id?'selected':''}>${s.e} ${e(s.n)}</option>`).join('')}</select>
+ <select id="tp"><option value="H">🔥 High</option><option value="M" selected>⭐ Medium</option><option value="L">🌱 Low</option></select>
+ <button class="btn" onclick="addT()">Add task</button></div></div>
+ ${L.length?`<div class="board">${L.map(t=>{const s=sub(t.s);return`<div class="note ${t.d?'done':''}" style="background:var(--c${s.c%PAL})"><span class="stk">${PRI[t.p][0]}</span> <span class="pill">${s.e} ${e(s.n)}</span>
+ <p class="t" style="font-size:1.05rem;font-weight:600;margin:8px 0">${e(t.t)}</p><button class="btn ghost" style="padding:4px 12px;color:var(--cardink);border-color:var(--cardink)" onclick="tog(${t.id})">${t.d?'↩ Undo':'✓ Done'}</button> <button class="btn ghost" style="padding:4px 12px;color:var(--cardink);border-color:var(--cardink)" onclick="del(${t.id})">🗑</button></div>`}).join('')}</div>`:'<div class="card muted">No tasks here yet. Pick a subject, set a priority, and add one ✨</div>'}`}
+function addSub(){const n=$('#sn').value.trim();if(!n)return;S.subs.push({id:Date.now(),n,e:$('#se').value,c:S.subs.length%PAL});save();draw()}
+function addT(){const t=$('#tt').value.trim();if(!t)return;S.todos.push({id:Date.now(),t,s:+$('#ts').value,p:$('#tp').value,d:false});save();draw()}
+const tog=id=>{const t=S.todos.find(x=>x.id==id);t.d=!t.d;save();draw()},del=id=>{S.todos=S.todos.filter(x=>x.id!=id);save();draw()};
+function quiz(){
+ if(!Q)return`<h1>Practice quiz <span class="stk">🎯</span></h1><div class="demo">Demo questions written for practice — not official exam papers. AI generation needs a server key.</div>
+ <div class="card"><h3>Pick a subject</h3><div class="row">${['All','Maths','Science','GK','English'].map(s=>`<button class="chip" onclick="startQ('${s}')">${s}</button>`).join('')}</div></div>`;
+ if(Q.done){return`<div class="card" style="text-align:center"><div class="stk" style="font-size:3rem">🎉</div><h2>${Q.score}/${Q.l.length}</h2><p>${Math.round(Q.score/Q.l.length*100)}% accuracy</p></div>
+ ${Q.wrong.length?`<h3>Review mistakes</h3>`+Q.wrong.map(q=>`<div class="card"><b>${e(q.q)}</b><p>✅ ${e(q.o[q.a])}</p><p class="muted">${e(q.x)}</p></div>`).join(''):'<p>Perfect round! 🌟</p>'}
+ <button class="btn" onclick="Q=null;draw()">Try again</button>`}
+ const q=Q.l[Q.i];return`<div class="muted">Question ${Q.i+1} of ${Q.l.length} · ${e(q.s)}</div><div class="bar"><i style="width:${Q.i/Q.l.length*100}%"></i></div>
+ <div class="card"><h3 style="font-family:Nunito;font-size:1.15rem">${e(q.q)}</h3>${q.o.map((o,i)=>`<button class="opt ${Q.sel!=null?(i==q.a?'ok':i==Q.sel?'bad':''):''}" ${Q.sel!=null?'disabled':''} onclick="pick(${i})">${e(o)}</button>`).join('')}
+ ${Q.sel!=null?`<p class="muted">💡 ${e(q.x)}</p><button class="btn" onclick="nextQ()">${Q.i+1==Q.l.length?'Finish':'Next'}</button>`:''}</div>`}
+function startQ(s){const l=BANK.filter(q=>(s=='All'||q.s==s)&&valid(q)).sort(()=>Math.random()-.5);Q={l,i:0,sel:null,score:0,wrong:[],done:false};draw()}
+function pick(i){const q=Q.l[Q.i];Q.sel=i;S.ans++;const h=S.hist.find(h=>h.s==q.s&&h.k=='q')||(S.hist.push({s:q.s,k:'q',c:0,n:0}),S.hist.at(-1));h.n++;
+ if(i==q.a){Q.score++;S.cor++;h.c++}else Q.wrong.push(q);save();draw()}
+function nextQ(){Q.sel=null;Q.i++;if(Q.i>=Q.l.length)Q.done=true;draw()}
+function cards(){const c=S.cards[CI];
+ return`<h1>Flashcards <span class="stk">🃏</span></h1>
+ ${c?`<div class="flip" onclick="FL=!FL;draw()">${e(FL?c.b:c.a)}</div><p class="muted" style="text-align:center">Card ${CI+1}/${S.cards.length} · tap to flip</p>
+ <div class="row"><button class="btn ghost" onclick="rate(1)">😅 Hard</button><button class="btn ghost" onclick="rate(3)">🙂 Medium</button><button class="btn ghost" onclick="rate(7)">😎 Easy</button></div>`:'<div class="card muted">No cards yet. Add your first one below 🌸</div>'}
+ <div class="card"><h3>New card</h3><input id="ca" maxlength="200" placeholder="Question"><div class="row"><input id="cb" maxlength="300" placeholder="Answer"><button class="btn" onclick="addC()">Add card</button></div></div>`}
+function addC(){const a=$('#ca').value.trim(),b=$('#cb').value.trim();if(!a||!b)return;S.cards.push({a,b,next:0});save();draw()}
+function rate(d){S.cards[CI].next=Date.now()+d*864e5;FL=false;CI=(CI+1)%S.cards.length;save();draw()}
+function pro(){return`<h1>Go Pro <span class="stk">💎</span></h1><div class="demo">Demo checkout — no real payment is taken. Real billing needs Razorpay keys and a verified server webhook.</div>
+ <div class="plans" style="margin-top:12px">${[['Free','₹0','5 AI tutor chats/day · basic cards · basic analytics',0],['Pro Monthly','₹199/mo','High AI limits · mock tests · detailed analytics',1],['Pro Annual','₹1,499/yr','Everything in Pro · best value 🎁',2]].map(p=>`<div class="note" style="background:var(--c${p[3]+1})"><h3>${p[0]}</h3><b style="font-size:1.4rem">${p[1]}</b><p style="font-size:.9rem">${p[2]}</p><button class="btn" onclick="alert('Demo only: payments are not configured.')">${p[3]?'Try demo checkout':'Current plan'}</button></div>`).join('')}</div>`}
+let M=null,MT=null;
+const fmt=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+function mock(){
+ if(!M){const h=S.mocks||[];return`<h1>Mock test <span class="stk">⏱️</span></h1><div class="demo">Practice mock built from demo questions — not an official exam paper.</div>
+ <div class="card"><div class="row"><label>Duration<select id="md"><option value="180">3 min</option><option value="300" selected>5 min</option><option value="600">10 min</option></select></label><label>Negative marking<select id="mn"><option value="0">None</option><option value="0.25" selected>−0.25 per wrong</option><option value="0.33">−0.33 per wrong</option></select></label></div><p class="muted">Sections: Maths, Science, GK, English. Auto-submits when time runs out.</p><button class="btn" onclick="startM()">Start mock</button></div>
+ <h3>Past attempts</h3>${h.length?h.slice().reverse().map(m=>`<div class="card">${m.d} · <b>${m.sc}</b>/${m.max} · ${m.acc}% accuracy</div>`).join(''):'<p class="muted">Your scores will show up here after your first mock.</p>'}`}
+ if(M.done)return mres();
+ const q=M.l[M.i];
+ return`<div class="top"><b>${e(q.s)} section</b><b id="tm" class="pill" style="background:var(--c3)">${fmt(M.t)}</b></div>
+ <div class="card"><h3 style="font-family:Nunito;font-size:1.15rem">${M.i+1}. ${e(q.q)}</h3>${q.o.map((o,i)=>`<button class="opt ${M.a[M.i]===i?'ok':''}" onclick="mAns(${i})">${e(o)}</button>`).join('')}
+ <div class="row"><button class="btn ghost" onclick="mGo(M.i-1)">Prev</button><button class="btn ghost" onclick="M.r[M.i]=!M.r[M.i];draw()">${M.r[M.i]?'Unmark':'🚩 Mark for review'}</button><button class="btn ghost" onclick="M.a[M.i]=null;draw()">Clear</button><button class="btn" onclick="mGo(M.i+1)">Next</button></div></div>
+ <div class="row">${M.l.map((_,i)=>`<button class="chip ${i==M.i?'on':''}" style="${M.r[i]?'border-color:#e0607e;border-width:3px':M.a[i]!=null&&i!=M.i?'background:var(--c2);color:var(--cardink)':''}" onclick="mGo(${i})">${i+1}</button>`).join('')}</div>
+ <p class="muted">Green = answered · red border = marked for review</p>
+ <button class="btn" onclick="if(confirm('Submit the test?'))submitM()">Submit test</button>`}
+function startM(){M={l:BANK.filter(valid).sort((a,b)=>a.s.localeCompare(b.s)),i:0,a:[],r:[],t:+$('#md').value,total:+$('#md').value,neg:+$('#mn').value,done:false};clearInterval(MT);MT=setInterval(()=>{if(!M||M.done)return;M.t--;if(M.t<=0){submitM();return}const el=$('#tm');if(el)el.textContent=fmt(M.t)},1000);draw()}
+function mAns(i){M.a[M.i]=i;draw()}
+function mGo(i){if(i<0||i>=M.l.length)return;M.i=i;draw()}
+function submitM(){clearInterval(MT);let c=0,w=0,by={};M.l.forEach((q,i)=>{const b=by[q.s]=by[q.s]||{c:0,n:0};b.n++;const a=M.a[i];if(a==null)return;S.ans++;const h=S.hist.find(h=>h.s==q.s&&h.k=='q')||(S.hist.push({s:q.s,k:'q',c:0,n:0}),S.hist.at(-1));h.n++;if(a==q.a){c++;b.c++;S.cor++;h.c++}else w++});
+ const sc=Math.round((c-w*M.neg)*100)/100,max=M.l.length,att=c+w,acc=att?Math.round(c/att*100):0,prev=(S.mocks||[]).at(-1);
+ M.res={c,w,sk:max-att,sc,max,acc,by,time:M.total-Math.max(M.t,0),diff:prev?Math.round((sc-prev.sc)*100)/100:null};
+ S.mocks=(S.mocks||[]).concat({d:new Date().toLocaleDateString(),sc,max,acc});M.done=true;save();draw()}
+function mres(){const r=M.res;return`<div class="card" style="text-align:center"><div class="stk" style="font-size:3rem">🏆</div><h2>${r.sc} / ${r.max}</h2><p>${r.acc}% accuracy · ${r.c} right · ${r.w} wrong · ${r.sk} skipped</p><p class="muted">Time spent ${fmt(r.time)}${r.diff!=null?` · ${r.diff>=0?'+':''}${r.diff} vs last attempt`:''}</p></div>
+ <div class="card"><h3>Topic breakdown</h3>${Object.entries(r.by).map(([s,b])=>`<p>${e(s)} — ${b.c}/${b.n}</p><div class="bar"><i style="width:${b.c/b.n*100}%"></i></div>`).join('')}</div>
+ <h3>Answer review</h3>${M.l.map((q,i)=>`<div class="card"><b>${i+1}. ${e(q.q)}</b><p>Your answer: ${M.a[i]==null?'Skipped':e(q.o[M.a[i]])} ${M.a[i]==q.a?'✅':'❌'}</p><p>Correct: ${e(q.o[q.a])}</p><p class="muted">${e(q.x)}</p></div>`).join('')}
+ <button class="btn" onclick="M=null;draw()">Back to mocks</button>`}
+const CFG={AI_URL:'',SB_URL:'',SB_KEY:''}; // fill in after deploying the backend (see README)
+let TC=S.chat||[],TL={lv:'beginner',lg:'en'},busy=false,AM='';
+const more=()=>`<h1>More <span class="stk">✨</span></h1><div class="board">${[['cards','🃏','Flashcards'],['notes','🗒️','Notes & summaries'],['stats','📊','Progress'],['acct','👤','Account'],['pro','💎','Go Pro']].map((m,i)=>`<div class="note" style="background:var(--c${i})" role="button" tabindex="0" onclick="go('${m[0]}')" onkeydown="if(event.key=='Enter')go('${m[0]}')"><span class="stk">${m[1]}</span><h3>${m[2]}</h3></div>`).join('')}</div>`;
+function tutor(){return`<h1>AI tutor <span class="stk">🤖</span></h1>${CFG.AI_URL?'':'<div class="demo">Demo mode: replies are placeholders. Deploy the ai-tutor function and set CFG.AI_URL for real answers.</div>'}
+<div class="row"><select aria-label="Level" onchange="TL.lv=this.value">${['beginner','intermediate','advanced'].map(x=>`<option ${TL.lv==x?'selected':''}>${x}</option>`).join('')}</select><select aria-label="Language" onchange="TL.lg=this.value"><option value="en">English</option><option value="hi" ${TL.lg=='hi'?'selected':''}>हिन्दी</option></select></div>
+${TC.length?TC.slice(-12).map(m=>`<div class="card" style="${m.r=='u'?'background:var(--c1);color:var(--cardink)':''}">${e(m.t)}</div>`).join(''):'<p class="muted">Ask about any topic, like “explain Newton’s third law”.</p>'}${busy?'<p class="muted">Thinking…</p>':''}
+<div class="row"><input id="tq" maxlength="500" placeholder="Ask a question" onkeydown="if(event.key=='Enter')ask()"><button class="btn" onclick="ask()">Send</button></div>
+<p class="muted">Answers can contain mistakes. Check important facts and exam rules with official sources.</p>`}
+async function ask(){const q=$('#tq').value.trim();if(!q||busy)return;const hist=TC.slice(-6);TC.push({r:'u',t:q});busy=true;draw();let a;
+ try{if(!CFG.AI_URL)a=TL.lg=='hi'?'यह डेमो उत्तर है। असली उत्तर के लिए AI सर्वर जोड़ें।':`Demo reply (${TL.lv}): a real answer to “${q.slice(0,60)}” would appear here with steps and an example.`;
+ else{const r=await fetch(CFG.AI_URL,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+(S.token||'')},body:JSON.stringify({message:q,level:TL.lv,lang:TL.lg,history:hist})});
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(r.status==401?'Log in from More → Account first.':j.error||'Server error');a=j.reply}}
+ catch(x){a='⚠️ '+x.message}
+ TC.push({r:'a',t:a});S.chat=TC.slice(-40);busy=false;save();draw()}
+function acct(){return`<h1>Account <span class="stk">👤</span></h1>${CFG.SB_URL?'':'<div class="demo">Demo mode: add your Supabase URL and anon key in CFG to turn on accounts.</div>'}
+${S.email?`<div class="card">Logged in${S.demo?' (demo account, this device only)':''} as ${e(S.email||'')}<p><button class="btn ghost" onclick="logout()">Log out</button></p></div>`:`<div class="card"><input id="ae" type="email" placeholder="Email" autocomplete="email"><div class="row"><input id="ap" type="password" placeholder="Password (8+ characters)" autocomplete="current-password"></div><div class="row"><button class="btn" onclick="auth('login')">Log in</button><button class="btn ghost" onclick="auth('signup')">Sign up</button><button class="btn ghost" onclick="auth('recover')">Reset password</button></div></div>`}
+<p>${e(AM)}</p><p class="muted">Google sign-in: turn on the Google provider in Supabase, then link a button to your project’s /auth/v1/authorize?provider=google address.</p>`}
+async function auth(k){const email=$('#ae').value.trim(),password=$('#ap')?$('#ap').value:'';
+ if(!/^\S+@\S+\.\S+$/.test(email)){AM='Enter a valid email address.';return draw()}
+ if(k!='recover'&&password.length<8){AM='Use a password with at least 8 characters.';return draw()}
+ if(!CFG.SB_URL){if(k=='recover')AM='Demo mode: password reset needs Supabase.';else{S.email=email;S.demo=true;AM='';save()}return draw()}
+ try{const r=await fetch(CFG.SB_URL+'/auth/v1/'+({login:'token?grant_type=password',signup:'signup',recover:'recover'})[k],{method:'POST',headers:{apikey:CFG.SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(k=='recover'?{email}:{email,password})});
+ const j=await r.json();if(!r.ok)throw new Error(j.msg||j.error_description||'Something went wrong');
+ if(j.access_token){S.token=j.access_token;S.rt=j.refresh_token;S.email=email;S.demo=false;AM='';save()}
+ AM=k=='recover'?'Check your email for a reset link.':k=='signup'?'Check your email to confirm, then log in.':'Logged in.'}catch(x){AM='⚠️ '+x.message}draw()}
+function notes(){const N=S.notes||[];return`<h1>Notes <span class="stk">🗒️</span></h1><div class="card"><input id="nt" maxlength="60" placeholder="Title"><div class="row"><textarea id="nb" rows="4" maxlength="4000" placeholder="Type or paste your own study material"></textarea></div><button class="btn" onclick="addN()">Save note</button></div>
+${N.length?`<div class="board">${N.map(n=>`<div class="note" style="background:var(--c${n.id%5})"><h3>${e(n.t)}</h3><p style="white-space:pre-wrap">${e(n.b)}</p>${n.s?`<span class="pill">Key points (quick offline summary)</span><p style="white-space:pre-wrap">${e(n.s)}</p>`:''}<button class="btn ghost" style="padding:4px 12px;color:var(--cardink);border-color:var(--cardink)" onclick="sumN(${n.id})">✨ Summarize</button> <button class="btn ghost" style="padding:4px 12px;color:var(--cardink);border-color:var(--cardink)" onclick="delN(${n.id})">🗑</button></div>`).join('')}</div>`:'<div class="card muted">No notes yet. Paste something you’re studying 🌸</div>'}`}
+const addN=()=>{const t=$('#nt').value.trim(),b=$('#nb').value.trim();if(!b)return;(S.notes=S.notes||[]).push({id:Date.now(),t:t||'Untitled',b});save();draw()};
+const delN=id=>{S.notes=S.notes.filter(n=>n.id!=id);save();draw()};
+const sumN=id=>{const n=S.notes.find(x=>x.id==id);n.s=(n.b.match(/[^.!?\n]+[.!?]?/g)||[]).map(x=>x.trim()).filter(x=>x.length>20).slice(0,4).map(x=>'• '+x).join('\n')||'Add a little more text to summarize.';save();draw()};
+function stats(){const td=new Date().toDateString(),L=S.log||[],m=L.filter(l=>l.d==td).reduce((a,l)=>a+l.m,0);let st=0;while(L.some(l=>l.d==new Date(Date.now()-st*864e5).toDateString()))st++;
+ const sj=Object.entries(S.hist.reduce((o,h)=>{o[h.s]=o[h.s]||[0,0];o[h.s][0]+=h.c;o[h.s][1]+=h.n;return o},{})).map(([s,v])=>[s,Math.round(v[0]/v[1]*100)]).sort((a,b)=>a[1]-b[1]),mk=(S.mocks||[]).slice(-8);
+ return`<h1>Progress <span class="stk">📊</span></h1><div class="stats"><div class="card"><b>${m}</b>min today</div><div class="card"><b>${Math.min(100,Math.round(m/S.goal*100))}%</b>of goal</div><div class="card"><b>${st}🔥</b>day streak</div></div>
+<div class="card"><h3>Log study time</h3><div class="row"><input id="lm" type="number" min="1" max="600" placeholder="Minutes"><button class="btn" onclick="logT()">Add</button></div></div>
+<div class="card"><h3>Subjects</h3>${sj.length?sj.map(s=>`<p>${e(s[0])} — ${s[1]}%</p><div class="bar"><i style="width:${s[1]}%"></i></div>`).join(''):'<p class="muted">Finish a quiz to see subject accuracy.</p>'}</div>
+<div class="card"><h3>Mock scores</h3>${mk.length?`<div style="display:flex;gap:6px;align-items:flex-end;height:110px">${mk.map(x=>`<div title="${x.d}: ${x.acc}%" style="flex:1;background:var(--acc);border-radius:8px 8px 0 0;height:${Math.max(6,x.acc)}%"></div>`).join('')}</div><p class="muted">Accuracy per attempt, oldest to newest</p>`:'<p class="muted">No mock tests yet.</p>'}</div>
+<div class="card"><h3>Recommendation</h3><p>${sj.length&&sj[0][1]<70?`Revise ${e(sj[0][0])} next. Your accuracy there is ${sj[0][1]}%.`:'Keep your streak going with one quiz today.'}</p></div>`}
+function login(){return`<div style="text-align:center;margin-top:20px"><span class="stk" style="font-size:3rem">🎀</span><h1>Welcome to StudyMate</h1><p class="muted">Log in or create an account to save your progress.</p></div>
+${CFG.SB_URL?'':'<div class="demo">Demo mode: any email and password works, and nothing is verified or synced. Real accounts switch on when Supabase keys are added.</div>'}
+<div class="card"><label>Email<input id="ae" type="email" autocomplete="email"></label><div class="row"><label>Password<input id="ap" type="password" autocomplete="current-password" placeholder="At least 8 characters" onkeydown="if(event.key=='Enter')auth('login')"></label></div>
+<div class="row"><button class="btn" onclick="auth('login')">Log in</button><button class="btn ghost" onclick="auth('signup')">Create account</button></div>
+<p><a href="#" onclick="auth('recover');return false" style="color:var(--pri)">Forgot password?</a></p><p role="alert">${e(AM)}</p></div>`}
+function logout(){S.token='';S.rt='';S.email='';S.demo=false;AM='';save();draw()}
+(async()=>{if(CFG.SB_URL&&S.rt){try{const r=await fetch(CFG.SB_URL+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{apikey:CFG.SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:S.rt})});const j=await r.json();if(r.ok){S.token=j.access_token;S.rt=j.refresh_token;save()}else logout()}catch(x){}}})();
+const logT=()=>{const m=+$('#lm').value;if(!(m>0))return;(S.log=S.log||[]).push({d:new Date().toDateString(),m:Math.min(m,600)});save();draw()};
+
+draw();
+</script><script>if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js')</script></body></html>
